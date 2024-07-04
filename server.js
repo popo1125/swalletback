@@ -6,7 +6,7 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 require('dotenv').config(); // Добавьте эту строку
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 const uri = process.env.MONGODB_URI; // Используйте переменную окружения
 
 const client = new MongoClient(uri, {
@@ -86,6 +86,6 @@ client.connect(err => {
     });
 
     app.listen(port, () => {
-        console.log(`Server is running on http://localhost:${port}`);
+        console.log(`Server is running on port ${port}`);
     });
 });
