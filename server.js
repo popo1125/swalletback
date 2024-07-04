@@ -5,10 +5,11 @@ const crypto = require('crypto');
 const { MongoClient, ServerApiVersion } = require('mongodb');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
-const uri = "mongodb+srv://taraska2828:Taraseva2323!@swallet.bjl9q0i.mongodb.net/?appName=SWallet";
+const uri = "mongodb+srv://taraska2828:<password>@swallet.bjl9q0i.mongodb.net/?appName=SWallet";
 
+// Замените <password> на ваш настоящий пароль
 const client = new MongoClient(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -26,6 +27,7 @@ client.connect(err => {
 
     app.use(express.json());
 
+    // Маршрут для создания кошелька
     app.post('/api/create_wallet', async (req, res) => {
         const { user_id, username } = req.body;
         
@@ -44,6 +46,40 @@ client.connect(err => {
         try {
             await usersCollection.insertOne(newUser);
             res.status(201).json(newUser);
+        } catch (error) {
+            console.error('Error:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    });
+
+    // Маршрут для получения информации о пользователе
+    app.get('/api/user/:user_id', async (req, res) => {
+        const user_id = parseInt(req.params.user_id);
+
+        try {
+            const user = await usersCollection.findOne({ user_id: user_id });
+            if (user) {
+                res.status(200).json(user);
+            } else {
+                res.status(404).json({ error: 'User not found' });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    });
+
+    // Маршрут для удаления пользователя
+    app.delete('/api/user/:user_id', async (req, res) => {
+        const user_id = parseInt(req.params.user_id);
+
+        try {
+            const result = await usersCollection.deleteOne({ user_id: user_id });
+            if (result.deletedCount === 1) {
+                res.status(200).json({ message: 'User deleted successfully' });
+            } else {
+                res.status(404).json({ error: 'User not found' });
+            }
         } catch (error) {
             console.error('Error:', error);
             res.status(500).json({ error: 'Internal server error' });
