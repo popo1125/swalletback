@@ -7,14 +7,8 @@ require('dotenv').config(); // Добавьте эту строку
 
 const app = express();
 const port = process.env.PORT || 3000;
-<<<<<<< HEAD
 const uri = process.env.MONGODB_URI; // Используйте переменную окружения
-=======
 
-const uri = "mongodb+srv://taraska2828:<password>@swallet.bjl9q0i.mongodb.net/?appName=SWallet";
->>>>>>> 9b8f58b0d458b193a6fa7fe88dbd3717faaa52b0
-
-// Замените <password> на ваш настоящий пароль
 const client = new MongoClient(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
